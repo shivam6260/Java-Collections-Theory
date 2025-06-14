@@ -25,13 +25,14 @@ class CustomComparator implements Comparator<Student> {
         return s1.getName().length() - s2.getName().length();
     }
 }
+
 public class ComparatorLearning3 {
     public static void main(String[] args) {
-        Student s1 = new Student(4.5,"Shivam");
-        Student s2 = new Student(3.5,"Shwta");
-        Student s3 = new Student(3.8,"Dink");
-        Student s4 = new Student(4.2,"Lucky");
-        Student s5 = new Student(4.2,"Mayan");
+        Student s1 = new Student(4.5, "Shivam");
+        Student s2 = new Student(3.5, "Shwta");
+        Student s3 = new Student(3.8, "Dink");
+        Student s4 = new Student(4.2, "Lucky");
+        Student s5 = new Student(4.2, "Mayan");
 
         List<Student> list = new ArrayList<Student>();
         list.add(s1);
@@ -41,31 +42,33 @@ public class ComparatorLearning3 {
         list.add(s5);
 
         /// 2nd Way - With Lambda Expression
-        Comparator<Student> customComparator2 = (a , b) -> {
-            if(a.getGpa() == b.getGpa()) {
+        Comparator<Student> customComparator2 = (a, b) -> {
+            if (a.getGpa() == b.getGpa()) {
                 return a.getName().length() - b.getName().length();
             }
-            if(a.getGpa() - b.getGpa() < 0) {
+            if (a.getGpa() - b.getGpa() < 0) {
                 return 1;
-            }else {
+            } else {
                 return -1;
             }
         };
 
-        /// 3rd Way - Direct using List.sort()
-        list.sort( ( a , b ) -> {
-            if(a.getGpa() == b.getGpa()) {
-                return a.getName().length() - b.getName().length();
-            }
-            if(a.getGpa() - b.getGpa() > 0) {
-                return 1;
-            }else {
-                return -1;
-            }
-        } );
+        Collections.sort(list, customComparator2);
+        ///Collections.sort(list, new CustomComparator());
         System.out.println(list);
 
-        Collections.sort(list, customComparator2);
+        /// 3rd Way - Direct using List.sort()
+        list.sort((a, b) -> {
+            if (a.getGpa() == b.getGpa()) {
+                return a.getName().length() - b.getName().length();
+            }
+            if (a.getGpa() - b.getGpa() > 0) {
+                return 1;
+            } else {
+                return -1;
+            }
+        });
+
         System.out.println(list);
 
     }
