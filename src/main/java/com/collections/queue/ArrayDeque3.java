@@ -70,6 +70,107 @@ public class ArrayDeque3 {
          */
 
         /**
+         🔷 1. What is ArrayDeque?
+
+         Deque<Integer> deque = new ArrayDeque<>();
+
+         ✅ It is a resizable-array-based implementation of the Deque interface.
+
+         This means:
+         You can add/remove elements from both ends (addFirst, addLast, removeFirst, removeLast).
+         Backed by a circular array, not linked list.
+         Faster than LinkedList in most Deque use-cases.
+
+         🔷 2. Class Declaration and Inheritance
+
+         public class ArrayDeque<E> extends AbstractCollection<E>
+         implements Deque<E>, Cloneable, Serializable
+
+         Implements Deque — supports stack, queue, and deque behavior.
+         Not thread-safe, and does not allow null elements.
+
+         🔷 3. Internal Data Structure
+         Internally, ArrayDeque uses a resizable circular array:
+
+         transient Object[] elements;
+         transient int head;
+         transient int tail;
+
+         ✅ Key fields:
+         | Field      | Purpose                                    |
+         | ---------- | ------------------------------------------ |
+         | `elements` | The actual backing array                   |
+         | `head`     | Index of the first element                 |
+         | `tail`     | Index after the last element (insert here) |
+
+         🔁 Circular buffer behavior:
+         The array is treated as circular — if tail reaches the end, it wraps around to 0.
+
+         🔷 4. How Operations Work Internally
+
+         ✅ addLast(e) / offerLast(e) — Add to tail (right end)
+         elements[tail] = e;
+         tail = (tail + 1) % elements.length;
+
+         If tail == head after insert → array is full → resize array to 2× size.
+
+         ✅ addFirst(e) / offerFirst(e) — Add to head (left end)
+         head = (head - 1 + elements.length) % elements.length;
+         elements[head] = e;
+
+         Again, if full → resize.
+
+         ✅ removeFirst() / pollFirst() — Remove from head
+
+         E result = (E) elements[head];
+         elements[head] = null;
+         head = (head + 1) % elements.length;
+
+         ✅ removeLast() / pollLast() — Remove from tail
+
+         tail = (tail - 1 + elements.length) % elements.length;
+         E result = (E) elements[tail];
+         elements[tail] = null;
+
+         🔷 5. Array Resizing (When Full)
+         When size == capacity, a new array of size 2× is created,
+         and elements are copied over in proper order from head to tail.
+
+         Resizing logic example:
+
+         private void doubleCapacity() {
+         int p = head;
+         int n = elements.length;
+         int r = n - p; // number of elements to the right of head
+         Object[] a = new Object[n << 1]; // double the size
+         System.arraycopy(elements, p, a, 0, r);
+         System.arraycopy(elements, 0, a, r, p);
+         elements = a;
+         head = 0;
+         tail = n;
+         }
+
+         🚀 This ensures:
+         Head is reset to 0
+         Elements are in correct logical order
+
+         🔷 7. Time Complexities
+         | Operation        | Time Complexity |
+         | ---------------- | --------------- |
+         | `addFirst`       | O(1) amortized  |
+         | `addLast`        | O(1) amortized  |
+         | `removeFirst`    | O(1)            |
+         | `removeLast`     | O(1)            |
+         | `peekFirst/Last` | O(1)            |
+
+         🔷 8. Comparison with Other Structures
+         | Feature                | `ArrayDeque`             | `LinkedList`        | `Stack` (legacy)         |
+         | ---------------------- | ------------------------ | ------------------- | ------------------------ |
+         | Backing structure      | Resizable circular array | Doubly linked list  | Dynamic array (`Vector`) |
+         | Null elements allowed? | ❌ No                     | ✅ Yes               | ✅ Yes                    |
+         | Thread-safe            | ❌ No                     | ❌ No                | ✅ Yes (synchronized)     |
+         | Performance            | 🚀 Best for Deque        | Slower due to nodes | Slower & legacy          |
+
 
          */
 
